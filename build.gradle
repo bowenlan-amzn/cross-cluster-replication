@@ -132,6 +132,8 @@ configurations {
 }
 
 dependencies {
+    compileOnly "org.opensearch:opensearch-index-management-spi:${common_utils_version}"
+
     runtimeOnly "org.opensearch:opensearch:${opensearch_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
@@ -186,6 +188,7 @@ opensearchplugin {
     name = project.name
     description = "OpenSearch Cross Cluster Replication Plugin"
     classname = "org.opensearch.replication.ReplicationPlugin"
+    extendedPlugins = ['opensearch-index-management']
 }
 
 java {

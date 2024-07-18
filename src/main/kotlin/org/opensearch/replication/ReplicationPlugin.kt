@@ -148,10 +148,14 @@ import org.opensearch.index.engine.NRTReplicationEngine
 import org.opensearch.indices.SystemIndexDescriptor
 import org.opensearch.replication.util.ValidationUtil
 
+import org.opensearch.indexmanagement.spi.IndexManagementExtension
+import org.opensearch.indexmanagement.spi.indexstatemanagement.ActionParser
+import org.opensearch.ism.UnfollowActionParser
+
 
 @OpenForTesting
 internal class ReplicationPlugin : Plugin(), ActionPlugin, PersistentTaskPlugin,
-    RepositoryPlugin, EnginePlugin, SystemIndexPlugin {
+    RepositoryPlugin, EnginePlugin, SystemIndexPlugin, IndexManagementExtension {
 
     private lateinit var client: Client
     private lateinit var clusterService: ClusterService
@@ -405,4 +409,8 @@ internal class ReplicationPlugin : Plugin(), ActionPlugin, PersistentTaskPlugin,
     override fun getSystemIndexDescriptors(settings: Settings): Collection<SystemIndexDescriptor> {
         return listOf(SystemIndexDescriptor(ReplicationMetadataStore.REPLICATION_CONFIG_SYSTEM_INDEX, "System Index for storing cross cluster replication configuration."))
     }
+
+    override fun getExtensionName(): String = "cross-cluster-replication"
+
+    override fun getISMActionParsers(): List<ActionParser> = listOf(UnfollowActionParser())
 }
